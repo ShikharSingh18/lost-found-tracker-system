@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2f5bea">
+<title>Submit Claim | Lost &amp; Found Tracker</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<!-- includes/header.php -->
+<header class="site-header">
+  <div class="header-wrap">
+    <div class="bar">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">🔎</span>Lost &amp; Found</a>
+      <label class="nav-btn" for="nav-toggle"><span aria-hidden="true">☰</span><span class="sr-only">Toggle menu</span></label>
+    </div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+    <nav class="nav" aria-label="Main"><a href="../index.html" data-roles="STA"><span>Home</span></a><a href="../items/search.html" aria-current="page" data-roles="STA"><span>Search Found Items</span></a><a href="../claims/my_claims.html" data-roles="ST"><span>My Claims</span></a><a href="../admin/item_add.html" data-roles="TA"><span>Log Found Item</span></a><a href="../items/manage.html" data-roles="A"><span>Manage Items</span></a><a href="../admin/claim_review.html" data-roles="A"><span>Review Claims</span></a><a href="../admin/dashboard.html" data-roles="A"><span>Dashboard</span></a><a href="../admin/audit_log.html" data-roles="A"><span>Audit Log</span></a><a href="../notifications.html" data-roles="STA"><span>Notifications</span><span class="badge-dot" aria-label="2 unread">2</span></a><a href="../login.html">Logout</a></nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="crumbs"><a href="../items/search.html">Search</a> › <a href="../items/details.html">Item</a> › Claim</div>
+<div class="grid layout-2"><div class="stack"><div class="page-head"><h1>Submit a claim</h1><p class="muted">Provide details only the owner would know. An administrator will verify them before release.</p></div>
+<form class="card form" action="submit.html" method="post"><input type="hidden" name="csrf_token" value=""><input type="hidden" name="item_id" value="101">
+<div class="field"><label for="proof">Proof of ownership <span class="req">*</span></label><textarea id="proof" name="proof" minlength="20" required placeholder="E.g. number of keys, keyring charms, unique marks, contents…"></textarea><div class="hint">Minimum 20 characters. Do not share passwords or ID numbers.</div></div>
+<div class="btn-row"><button class="btn" type="submit">Submit claim</button><a class="btn btn-ghost" href="../items/details.html">Cancel</a></div></form></div>
+<aside class="card card-flat stack"><h3>You are claiming</h3><div class="item" style="box-shadow:none"><div class="thumb">🔑</div><div><b>Keys</b><div class="meta"><span>📍 Library entrance</span><span>📅 28 Oct 2026</span></div><span class="pill pill-found">Found</span></div></div></aside></div>
+</main>
+<!-- includes/footer.php -->
+<footer class="site-footer"><div class="inner"><span>Lost &amp; Found Tracker &middot; IT Project 700 &middot; Group 11</span><span>Report found items promptly. Ownership is verified before release.</span></div></footer>
+</body>
+</html>

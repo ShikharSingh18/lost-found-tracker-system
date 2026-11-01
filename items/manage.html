@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2f5bea">
+<title>Manage Items | Lost &amp; Found Tracker</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<!-- includes/header.php -->
+<header class="site-header">
+  <div class="header-wrap">
+    <div class="bar">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">🔎</span>Lost &amp; Found</a>
+      <label class="nav-btn" for="nav-toggle"><span aria-hidden="true">☰</span><span class="sr-only">Toggle menu</span></label>
+    </div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+    <nav class="nav" aria-label="Main"><a href="../index.html" data-roles="STA"><span>Home</span></a><a href="../items/search.html" data-roles="STA"><span>Search Found Items</span></a><a href="../claims/my_claims.html" data-roles="ST"><span>My Claims</span></a><a href="../admin/item_add.html" data-roles="TA"><span>Log Found Item</span></a><a href="../items/manage.html" aria-current="page" data-roles="A"><span>Manage Items</span></a><a href="../admin/claim_review.html" data-roles="A"><span>Review Claims</span></a><a href="../admin/dashboard.html" data-roles="A"><span>Dashboard</span></a><a href="../admin/audit_log.html" data-roles="A"><span>Audit Log</span></a><a href="../notifications.html" data-roles="STA"><span>Notifications</span><span class="badge-dot" aria-label="2 unread">2</span></a><a href="../login.html">Logout</a></nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="page-head"><h1>Manage items</h1><p class="muted">Create, update and dispose of item records.</p><a class="btn" href="../admin/item_add.html">+ Log found item</a></div>
+<details class="card filters" open><summary>Search &amp; filters</summary>
+<form class="form form-2" action="manage.html" method="get" style="margin-top:.75rem">
+<div class="field full"><label for="q">Keyword</label><input id="q" name="q" type="search" maxlength="100" placeholder="e.g. black, lanyard"></div>
+<div class="field"><label for="category">Category</label><select id="category" name="category"><option value="">All categories</option><option>Keys</option><option>Wallet</option><option>Phone</option><option>ID Card</option><option>Clothing</option><option>Stationery</option><option>Other</option></select></div>
+<div class="field"><label for="location">Location found</label><input id="location" name="location" maxlength="200"></div>
+<div class="field"><label for="from">Date found: from</label><input id="from" name="from" type="date"></div>
+<div class="field"><label for="to">Date found: to</label><input id="to" name="to" type="date"></div>
+<div class="full"><div class="field"><label for="status">Status</label><select id="status" name="status"><option value="">Any</option><option>Found</option><option>Claimed</option><option>Disposed</option></select></div></div>
+<div class="btn-row full"><button class="btn" type="submit">Apply filters</button><a class="btn btn-ghost" href="manage.html">Clear</a></div></form></details>
+<div class="table-wrap" style="margin-top:1rem"><table><thead><tr><th>ID</th><th>Category</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td data-label="ID">#100</td><td data-label="Category">Keys</td><td data-label="Location">Library entrance</td><td data-label="Date">2026-10-28</td><td data-label="Status"><span class="pill pill-found">Found</span></td><td class="actions"><a class="btn btn-sm btn-outline" href="details.html">Edit</a><a class="btn btn-sm btn-ghost" href="#">Dispose</a></td></tr><tr><td data-label="ID">#101</td><td data-label="Category">Phone</td><td data-label="Location">Cafeteria</td><td data-label="Date">2026-10-27</td><td data-label="Status"><span class="pill pill-found">Found</span></td><td class="actions"><a class="btn btn-sm btn-outline" href="details.html">Edit</a><a class="btn btn-sm btn-ghost" href="#">Dispose</a></td></tr><tr><td data-label="ID">#102</td><td data-label="Category">Wallet</td><td data-label="Location">Lecture Hall B</td><td data-label="Date">2026-10-26</td><td data-label="Status"><span class="pill pill-claimed">Claimed</span></td><td class="actions"><a class="btn btn-sm btn-outline" href="details.html">Edit</a><a class="btn btn-sm btn-ghost" href="#">Dispose</a></td></tr><tr><td data-label="ID">#103</td><td data-label="Category">ID Card</td><td data-label="Location">Admin foyer</td><td data-label="Date">2026-10-25</td><td data-label="Status"><span class="pill pill-found">Found</span></td><td class="actions"><a class="btn btn-sm btn-outline" href="details.html">Edit</a><a class="btn btn-sm btn-ghost" href="#">Dispose</a></td></tr><tr><td data-label="ID">#104</td><td data-label="Category">Clothing</td><td data-label="Location">Sports field</td><td data-label="Date">2026-10-24</td><td data-label="Status"><span class="pill pill-disposed">Disposed</span></td><td class="actions"><a class="btn btn-sm btn-outline" href="details.html">Edit</a><a class="btn btn-sm btn-ghost" href="#">Dispose</a></td></tr><tr><td data-label="ID">#105</td><td data-label="Category">Stationery</td><td data-label="Location">Lab 3</td><td data-label="Date">2026-10-22</td><td data-label="Status"><span class="pill pill-found">Found</span></td><td class="actions"><a class="btn btn-sm btn-outline" href="details.html">Edit</a><a class="btn btn-sm btn-ghost" href="#">Dispose</a></td></tr></tbody></table></div>
+</main>
+<!-- includes/footer.php -->
+<footer class="site-footer"><div class="inner"><span>Lost &amp; Found Tracker &middot; IT Project 700 &middot; Group 11</span><span>Report found items promptly. Ownership is verified before release.</span></div></footer>
+</body>
+</html>

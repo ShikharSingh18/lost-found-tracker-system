@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2f5bea">
+<title>Review Claims | Lost &amp; Found Tracker</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<!-- includes/header.php -->
+<header class="site-header">
+  <div class="header-wrap">
+    <div class="bar">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">🔎</span>Lost &amp; Found</a>
+      <label class="nav-btn" for="nav-toggle"><span aria-hidden="true">☰</span><span class="sr-only">Toggle menu</span></label>
+    </div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+    <nav class="nav" aria-label="Main"><a href="../index.html" data-roles="STA"><span>Home</span></a><a href="../items/search.html" data-roles="STA"><span>Search Found Items</span></a><a href="../claims/my_claims.html" data-roles="ST"><span>My Claims</span></a><a href="../admin/item_add.html" data-roles="TA"><span>Log Found Item</span></a><a href="../items/manage.html" data-roles="A"><span>Manage Items</span></a><a href="../admin/claim_review.html" aria-current="page" data-roles="A"><span>Review Claims</span></a><a href="../admin/dashboard.html" data-roles="A"><span>Dashboard</span></a><a href="../admin/audit_log.html" data-roles="A"><span>Audit Log</span></a><a href="../notifications.html" data-roles="STA"><span>Notifications</span><span class="badge-dot" aria-label="2 unread">2</span></a><a href="../login.html">Logout</a></nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="page-head"><h1>Review claims</h1><p class="muted">2 pending claims. Compare the proof with the item record before deciding.</p></div>
+<div class="items" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))"><form class="card stack" action="claim_review.html" method="post"><input type="hidden" name="claim_id" value="1">
+<div style="display:flex;justify-content:space-between;gap:.5rem;align-items:center"><h3 style="margin:0">Keys</h3><span class="pill pill-pending">Pending</span></div>
+<dl class="dl"><div><dt>Claimant</dt><dd>Sam M.</dd></div><div><dt>Submitted</dt><dd>2026-10-29</dd></div><div style="grid-column:1/-1"><dt>Proof of ownership</dt><dd>Three keys, red keyring charm, house key has tape</dd></div></dl>
+<fieldset style="border:0;padding:0;margin:0" class="stack"><legend class="legend">Decision <span class="req">*</span></legend>
+<label class="radio-card"><input type="radio" name="decision" value="Approve" required><span><b>Approve</b><br><span class="small muted">Item status changes to Claimed.</span></span></label>
+<label class="radio-card"><input type="radio" name="decision" value="Reject"><span><b>Reject</b><br><span class="small muted">Item stays Found.</span></span></label></fieldset>
+<button class="btn" type="submit">Save decision</button></form><form class="card stack" action="claim_review.html" method="post"><input type="hidden" name="claim_id" value="2">
+<div style="display:flex;justify-content:space-between;gap:.5rem;align-items:center"><h3 style="margin:0">Phone</h3><span class="pill pill-pending">Pending</span></div>
+<dl class="dl"><div><dt>Claimant</dt><dd>Lerato K.</dd></div><div><dt>Submitted</dt><dd>2026-10-28</dd></div><div style="grid-column:1/-1"><dt>Proof of ownership</dt><dd>Wallpaper is a beach photo; case has a scratch near the camera</dd></div></dl>
+<fieldset style="border:0;padding:0;margin:0" class="stack"><legend class="legend">Decision <span class="req">*</span></legend>
+<label class="radio-card"><input type="radio" name="decision" value="Approve" required><span><b>Approve</b><br><span class="small muted">Item status changes to Claimed.</span></span></label>
+<label class="radio-card"><input type="radio" name="decision" value="Reject"><span><b>Reject</b><br><span class="small muted">Item stays Found.</span></span></label></fieldset>
+<button class="btn" type="submit">Save decision</button></form></div>
+</main>
+<!-- includes/footer.php -->
+<footer class="site-footer"><div class="inner"><span>Lost &amp; Found Tracker &middot; IT Project 700 &middot; Group 11</span><span>Report found items promptly. Ownership is verified before release.</span></div></footer>
+</body>
+</html>

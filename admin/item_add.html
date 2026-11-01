@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2f5bea">
+<title>Log Found Item | Lost &amp; Found Tracker</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/upload.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<!-- includes/header.php -->
+<header class="site-header">
+  <div class="header-wrap">
+    <div class="bar">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">🔎</span>Lost &amp; Found</a>
+      <label class="nav-btn" for="nav-toggle"><span aria-hidden="true">☰</span><span class="sr-only">Toggle menu</span></label>
+    </div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+    <nav class="nav" aria-label="Main"><a href="../index.html"><span>Home</span></a><a href="../items/search.html"><span>Search Found Items</span></a><a href="../claims/my_claims.html"><span>My Claims</span></a><a href="../admin/item_add.html" aria-current="page"><span>Log Found Item</span></a><a href="../items/manage.html"><span>Manage Items</span></a><a href="../admin/claim_review.html"><span>Review Claims</span></a><a href="../admin/dashboard.html"><span>Dashboard</span></a><a href="../admin/audit_log.html"><span>Audit Log</span></a><a href="../notifications.html"><span>Notifications</span></a><a href="../login.html">Logout</a></nav>
+  </div>
+</header>
+<main id="main">
+<div class="page-head"><h1>Log a found item</h1><p class="muted">Status is set to Found automatically.</p></div>
+<form class="card form form-2" action="item_add.html" method="post" enctype="multipart/form-data" style="max-width:860px">
+<input type="hidden" name="csrf_token" value="">
+<div class="field"><label for="category">Category <span class="req">*</span></label><select id="category" name="category_id" required><option value="">Select a category</option><option>Keys</option><option>Wallet</option><option>Phone</option><option>ID Card</option><option>Clothing</option><option>Stationery</option><option>Other</option></select></div>
+<div class="field"><label for="date">Date found <span class="req">*</span></label><input id="date" name="date_found" type="date" required></div>
+<div class="field full"><label for="location">Location found <span class="req">*</span></label><input id="location" name="location_found" maxlength="200" required></div>
+<div class="field full"><label for="desc">Description <span class="req">*</span></label><textarea id="desc" name="description" maxlength="1000" required></textarea><div class="hint">Keep it general. Leave out details only the owner would know (used for verification).</div></div>
+
+<!-- ===== Photo upload (max 5 images, 15 MB each) ===== -->
+<div class="field full">
+  <div class="upl-head"><span class="legend" style="margin:0">Photographs</span><span id="upl-count" class="upl-count" aria-live="polite">0 / 5 photos</span></div>
+  <div class="hint" style="margin:.25rem 0 .75rem">Optional, but photos help owners recognise their item. Up to 5 photos, JPG or PNG, 15 MB each.</div>
+  <div class="uploader">
+    <div class="demo" role="group" aria-label="Example photo angles">
+      <div class="demo-stage"><div class="demo-frame"><svg viewBox="0 0 200 150" aria-hidden="true"><rect x="55" y="15" width="90" height="120" rx="18" fill="#dbe6ff" stroke="#2f5bea" stroke-width="3"/><rect x="70" y="55" width="60" height="38" rx="8" fill="#fff" stroke="#2f5bea" stroke-width="2"/><path d="M80 30h40" stroke="#2f5bea" stroke-width="4" stroke-linecap="round"/><circle cx="100" cy="112" r="6" fill="#2f5bea"/></svg><span class="chip">1. Front</span></div><div class="demo-frame"><svg viewBox="0 0 200 150" aria-hidden="true"><g class="pulse"><path d="M12 30V12h18M170 12h18v18M188 120v18h-18M30 138H12v-18" fill="none" stroke="#157347" stroke-width="4" stroke-linecap="round"/></g><rect x="70" y="40" width="60" height="75" rx="12" fill="#dbe6ff" stroke="#2f5bea" stroke-width="3"/><rect x="82" y="68" width="36" height="22" rx="5" fill="#fff" stroke="#2f5bea" stroke-width="2"/></svg><span class="chip">2. Overall</span></div><div class="demo-frame"><svg viewBox="0 0 200 150" aria-hidden="true"><rect x="82" y="15" width="36" height="120" rx="14" fill="#dbe6ff" stroke="#2f5bea" stroke-width="3"/><path d="M118 45q22 0 22 25t-22 25" fill="none" stroke="#2f5bea" stroke-width="3"/><path d="M92 40v70" stroke="#2f5bea" stroke-width="2" stroke-dasharray="4 5"/></svg><span class="chip">3. Side</span></div><div class="demo-frame"><svg viewBox="0 0 200 150" aria-hidden="true"><rect x="45" y="20" width="110" height="115" rx="18" fill="#dbe6ff" stroke="#2f5bea" stroke-width="3"/><path d="M100 20v-6" stroke="#2f5bea" stroke-width="3"/><g class="sway"><path d="M100 20c0 20 8 28 8 36" fill="none" stroke="#2f5bea" stroke-width="2.5"/><g transform="translate(78 56)"><rect width="56" height="38" rx="6" fill="#fff" stroke="#157347" stroke-width="3"/><circle cx="8" cy="8" r="3" fill="#157347"/><path d="M14 17h34M14 26h24" stroke="#5d6b7e" stroke-width="3" stroke-linecap="round"/></g></g><circle class="pulse" cx="106" cy="75" r="40" fill="none" stroke="#157347" stroke-width="3"/></svg><span class="chip">4. Label / tag</span></div><div class="demo-frame"><svg viewBox="0 0 200 150" aria-hidden="true"><rect x="55" y="15" width="90" height="120" rx="18" fill="#dbe6ff" stroke="#2f5bea" stroke-width="3"/><path d="M90 60l22 26M98 56l18 22M84 70l16 18" stroke="#b3261e" stroke-width="3" stroke-linecap="round"/><circle class="pulse" cx="100" cy="72" r="30" fill="none" stroke="#b3261e" stroke-width="3" stroke-dasharray="6 5"/></svg><span class="chip">5. Marks / damage</span></div></div>
+      <div class="small muted">Suggested shots, in this order. The first photo is used as the thumbnail in search results.</div>
+      <ul class="shots" id="shots"><li>Front</li><li>Overall</li><li>Side</li><li>Label / tag</li><li>Marks / damage</li></ul>
+    </div>
+    <label class="drop" id="drop">
+      <span class="big" aria-hidden="true">📷</span>
+      <b>Tap to add photos</b>
+      <span class="small muted">or drag and drop here</span>
+      <input id="photos" name="photos[]" type="file" accept="image/jpeg,image/png" multiple>
+    </label>
+    <div id="upl-errors" class="alert alert-bad upl-errors" role="alert"></div>
+    <ul class="previews" id="previews"></ul>
+    <div class="hint">Avoid photos showing names, ID numbers or card details. Those are used to verify ownership.</div>
+  </div>
+</div>
+<!-- ===== end photo upload ===== -->
+
+<div class="btn-row full"><button class="btn" type="submit">Save item</button><a class="btn btn-ghost" href="../index.html">Cancel</a></div>
+</form>
+</main>
+<!-- includes/footer.php -->
+<footer class="site-footer"><div class="inner"><span>Lost &amp; Found Tracker &middot; IT Project 700 &middot; Group 11</span><span>Report found items promptly. Ownership is verified before release.</span></div></footer>
+<script src="../assets/js/upload.js"></script>
+</body>
+</html>

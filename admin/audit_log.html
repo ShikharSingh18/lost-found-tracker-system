@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2f5bea">
+<title>Audit Log | Lost &amp; Found Tracker</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<!-- includes/header.php -->
+<header class="site-header">
+  <div class="header-wrap">
+    <div class="bar">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">🔎</span>Lost &amp; Found</a>
+      <label class="nav-btn" for="nav-toggle"><span aria-hidden="true">☰</span><span class="sr-only">Toggle menu</span></label>
+    </div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+    <nav class="nav" aria-label="Main"><a href="../index.html" data-roles="STA"><span>Home</span></a><a href="../items/search.html" data-roles="STA"><span>Search Found Items</span></a><a href="../claims/my_claims.html" data-roles="ST"><span>My Claims</span></a><a href="../admin/item_add.html" data-roles="TA"><span>Log Found Item</span></a><a href="../items/manage.html" data-roles="A"><span>Manage Items</span></a><a href="../admin/claim_review.html" data-roles="A"><span>Review Claims</span></a><a href="../admin/dashboard.html" data-roles="A"><span>Dashboard</span></a><a href="../admin/audit_log.html" aria-current="page" data-roles="A"><span>Audit Log</span></a><a href="../notifications.html" data-roles="STA"><span>Notifications</span><span class="badge-dot" aria-label="2 unread">2</span></a><a href="../login.html">Logout</a></nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="page-head"><h1>Audit log</h1><p class="muted">Status changes and claim decisions, with the responsible user.</p></div>
+<div class="table-wrap"><table><thead><tr><th>When</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody><tr><td data-label="When">2026-10-29 10:02</td><td data-label="User">Admin Naidoo</td><td data-label="Action">Claim approved</td><td data-label="Details">Claim #7 · Keys</td></tr><tr><td data-label="When">2026-10-29 09:40</td><td data-label="User">Staff Dlamini</td><td data-label="Action">Item logged</td><td data-label="Details">Item #101 · Keys</td></tr><tr><td data-label="When">2026-10-28 15:11</td><td data-label="User">Admin Naidoo</td><td data-label="Action">Claim rejected</td><td data-label="Details">Claim #5 · Phone</td></tr></tbody></table></div>
+</main>
+<!-- includes/footer.php -->
+<footer class="site-footer"><div class="inner"><span>Lost &amp; Found Tracker &middot; IT Project 700 &middot; Group 11</span><span>Report found items promptly. Ownership is verified before release.</span></div></footer>
+</body>
+</html>

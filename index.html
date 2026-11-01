@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2f5bea">
+<title>Home | Lost &amp; Found Tracker</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<!-- includes/header.php -->
+<header class="site-header">
+  <div class="header-wrap">
+    <div class="bar">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">🔎</span>Lost &amp; Found</a>
+      <label class="nav-btn" for="nav-toggle"><span aria-hidden="true">☰</span><span class="sr-only">Toggle menu</span></label>
+    </div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+    <nav class="nav" aria-label="Main"><a href="index.html" aria-current="page" data-roles="STA"><span>Home</span></a><a href="items/search.html" data-roles="STA"><span>Search Found Items</span></a><a href="claims/my_claims.html" data-roles="ST"><span>My Claims</span></a><a href="admin/item_add.html" data-roles="TA"><span>Log Found Item</span></a><a href="items/manage.html" data-roles="A"><span>Manage Items</span></a><a href="admin/claim_review.html" data-roles="A"><span>Review Claims</span></a><a href="admin/dashboard.html" data-roles="A"><span>Dashboard</span></a><a href="admin/audit_log.html" data-roles="A"><span>Audit Log</span></a><a href="notifications.html" data-roles="STA"><span>Notifications</span><span class="badge-dot" aria-label="2 unread">2</span></a><a href="login.html">Logout</a></nav>
+  </div>
+</header>
+<main id="main">
+
+<section class="hero stack">
+  <div><h1>Lost something? Find it online.</h1>
+  <p>Search items handed in around campus, claim yours with proof of ownership, and track the decision.</p></div>
+  <form action="items/search.html" method="get" class="form" role="search">
+    <label class="sr-only" for="q">Search keyword</label>
+    <input id="q" name="q" type="search" placeholder="Try “keys” or “blue bag”">
+    <div class="btn-row"><button class="btn" type="submit">Search found items</button><a class="btn btn-outline" href="items/search.html">Browse all</a></div>
+  </form>
+</section>
+<section class="stack" style="margin-top:1.5rem">
+  <h2>Quick actions</h2>
+  <div class="tiles">
+    <a class="tile" href="items/search.html"><div class="ico">🔍</div><b>Search</b><div class="small muted">Find your item</div></a>
+    <a class="tile" href="claims/my_claims.html"><div class="ico">📋</div><b>My claims</b><div class="small muted">Check status</div></a>
+    <a class="tile" href="admin/item_add.html"><div class="ico">➕</div><b>Log item</b><div class="small muted">Staff &amp; admin</div></a>
+    <a class="tile" href="notifications.html"><div class="ico">🔔</div><b>Alerts</b><div class="small muted">2 unread</div></a>
+  </div>
+</section>
+<section class="grid layout-2" style="margin-top:1.5rem">
+  <div class="stack"><h2>Recently found</h2><div class="items"><a class="item" href="items/details.html"><div class="thumb" aria-hidden="true">🔑</div><div><h3>Keys</h3><p class="small" style="margin:0">Set of 3 keys on a blue lanyard</p><div class="meta"><span>📅 2026-10-28</span><span>📍 Library entrance</span></div><span class="pill pill-found">Found</span></div></a><a class="item" href="items/details.html"><div class="thumb" aria-hidden="true">📱</div><div><h3>Phone</h3><p class="small" style="margin:0">Black smartphone, cracked corner</p><div class="meta"><span>📅 2026-10-27</span><span>📍 Cafeteria</span></div><span class="pill pill-found">Found</span></div></a><a class="item" href="items/details.html"><div class="thumb" aria-hidden="true">👛</div><div><h3>Wallet</h3><p class="small" style="margin:0">Brown leather wallet</p><div class="meta"><span>📅 2026-10-26</span><span>📍 Lecture Hall B</span></div><span class="pill pill-found">Found</span></div></a></div><a class="btn btn-ghost" href="items/search.html">View all items</a></div>
+  <div class="card stack"><h2>How it works</h2>
+  <ol class="steps"><li><div><b>Search</b><br><span class="muted small">Filter by keyword, category, date or location.</span></div></li>
+  <li><div><b>Claim</b><br><span class="muted small">Describe something only the owner would know.</span></div></li>
+  <li><div><b>Verify</b><br><span class="muted small">An administrator reviews your proof.</span></div></li>
+  <li><div><b>Collect</b><br><span class="muted small">Approved items are marked Claimed.</span></div></li></ol></div>
+</section>
+</main>
+<!-- includes/footer.php -->
+<footer class="site-footer"><div class="inner"><span>Lost &amp; Found Tracker &middot; IT Project 700 &middot; Group 11</span><span>Report found items promptly. Ownership is verified before release.</span></div></footer>
+</body>
+</html>
