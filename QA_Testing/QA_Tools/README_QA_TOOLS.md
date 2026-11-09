@@ -10,6 +10,7 @@ from the command line.
 | backup.bat | Backup (Phase 4 Table 26): mysqldump --single-transaction of lost_found + copy of the photos + manifest with a fingerprint of every table, into `<XAMPP>\backups\<date_time>\` (outside htdocs, so it can never be downloaded). |
 | restore_test.bat | Restores the latest backup into a SEPARATE database `lost_found_restore` and proves every table is identical (Table 26 "restore testing"). The live database is not touched. |
 | recover.bat | Disaster recovery: puts the latest backup back into the LIVE database `lost_found` and the photos folder, then proves it is identical. You must type RESTORE. Everything changed since the backup is lost. |
+| reset_demo.bat | Demo preparation: makes a backup, then empties the database and photos and loads a small realistic demo story (5 accounts, 11 items, pending / approved+collected / rejected claims, a disposed item). Type RESET. Demo password is printed at the end. Run it on the DEMO computer only. |
 | stress_test.bat | Stress test through the real website (many logged-in users at the same time). Adds test data marked `@stress.test` / `STRESS TEST`. `stress_test.bat --cleanup` removes it. |
 
 Each run prints PASS/FAIL and saves a log in `tools\results\` – put those logs in the evidence pack.

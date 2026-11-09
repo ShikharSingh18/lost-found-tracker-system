@@ -64,8 +64,17 @@ function verify_csrf(?string $token = null): void
 {
     $token ??= $_POST['csrf_token'] ?? '';
     if (!is_string($token) || !hash_equals(csrf_token(), $token)) {
+        // NOTE-03: show the refusal inside the normal site layout (was plain text)
         http_response_code(400);
-        exit('Your form expired or was not valid. Go back, refresh the page and try again.');
+        $pageTitle = 'Form expired';
+        require __DIR__ . '/header.php';
+        echo '<div class="alert alert-warn" role="alert"><b>This form has expired or was not sent from this site.</b> '
+           . 'Nothing was saved. This protects you against forged requests.</div>'
+           . '<p><a class="btn" href="javascript:history.back()">Go back</a> '
+           . '<a class="btn btn-ghost" href="' . e(url('index.php')) . '">Home</a></p>'
+           . '<p class="small muted">Tip: go back, refresh the page (F5) and try again. This happens if the page was open for a long time or you logged out in another tab.</p>';
+        require __DIR__ . '/footer.php';
+        exit;
     }
 }
 

@@ -1,0 +1,21 @@
+# Lost & Found Tracker – site-wide Apache settings (NOTE-01)
+# Don't reveal the Apache / OpenSSL / PHP versions to visitors.
+ServerSignature Off
+<IfModule mod_headers.c>
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+</IfModule>
+
+# Friendly error pages inside the site layout instead of Apache's default pages.
+# If the site folder is renamed, change /LostFoundTracker/ below to the new BASE_URL.
+ErrorDocument 403 /LostFoundTracker/error.php
+ErrorDocument 404 /LostFoundTracker/error.php
+ErrorDocument 500 /LostFoundTracker/error.php
+
+# No folder listings (e.g. /assets/ or /database/ showing a list of files).
+Options -Indexes
+
+# The database scripts and docs are not web pages.
+<FilesMatch "\.(sql|md|bat|example\.php)$">
+    Require all denied
+</FilesMatch>
