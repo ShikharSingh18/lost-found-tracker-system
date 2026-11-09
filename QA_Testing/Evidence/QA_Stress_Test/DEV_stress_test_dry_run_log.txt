@@ -1,0 +1,83 @@
+
+========================================================================
+Lost & Found Tracker – STRESS TEST  2026-11-04 20:46:33
+========================================================================
+Site: http://127.0.0.1:8112   Database:    PHP 8.3.6
+This adds test data (users *@stress.test, items "STRESS TEST …"). Make a backup first (backup.bat).
+
+========================================================================
+Setting up test data
+========================================================================
+Created 10 claimant accounts, 7 race items with 16 claims, 1000 bulk items.
+Items in database now: 1040
+
+========================================================================
+Logging in 25 admin browser sessions
+========================================================================
+25 sessions ready in 1.6 s (each login = real password check).
+
+========================================================================
+ST-1  10 admins approve 10 different claims on the same item at the same moment
+========================================================================
+HTTP responses: {"302":10}   Messages: 1 "approved", 9 "already decided"
+  1x  Claim #n approved. The Keys (item #n) is now Claimed. 9 other pending claim(s) for this item were rejected automatically.
+  9x  Claim #n was already decided. Nothing was changed.
+Database: Approved 1 · Rejected 9 · Pending 0 · item Claimed · audit APPROVED 1 / REJECTED 9 / STATUS_CHANGED 1 · notifications 10
+PASS – exactly one claim approved, all others rejected once, audit and notifications match
+
+========================================================================
+ST-2  5 admins approve the SAME claim at the same moment
+========================================================================
+Messages: 1 "approved", 4 other.   Database: claim Approved · CLAIM_APPROVED audit rows 1 · notifications 1
+PASS – approved exactly once – no duplicate audit row or notification
+
+========================================================================
+ST-3  Approve and Dispose the same item at the same moment (5 items)
+========================================================================
+Outcomes: #45 Claimed/Approved, #46 Disposed/Rejected, #47 Disposed/Rejected, #48 Claimed/Approved, #49 Claimed/Approved
+PASS – every item is either Claimed+Approved or Disposed+Rejected – never mixed
+
+========================================================================
+ST-4  Load: 25 users at the same time × 8 rounds, 1040 items
+========================================================================
+Requests 200 · errors 0 · average 0.016 s · median 0.017 s · 95% 0.029 s · slowest 0.033 s · 813.3 requests/s
+Slowest per page:
+  items/search.php              92 requests  avg 0.017 s  max 0.033 s
+  items/details.php             19 requests  avg 0.014 s  max 0.030 s
+  items/manage.php              19 requests  avg 0.016 s  max 0.030 s
+  notifications_count.php       19 requests  avg 0.013 s  max 0.024 s
+  admin/dashboard.php           18 requests  avg 0.017 s  max 0.031 s
+  admin/reports.php             17 requests  avg 0.018 s  max 0.031 s
+  admin/audit_log.php           16 requests  avg 0.020 s  max 0.029 s
+PASS – no errors and every page under 3 s with 25 users at once
+
+========================================================================
+ST-5  Heavy pages with 1040 items
+========================================================================
+  Dashboard                          HTTP 200  0.003 s  ok
+  Items report (page 1)              HTTP 200  0.003 s  ok
+  Export to Excel - all items        HTTP 200  0.006 s  (1040 rows)  ok
+  Audit log export - all entries     HTTP 200  0.006 s  (1091 rows)  ok
+  Search matching 1 000 items        HTTP 200  0.002 s  ok
+PASS – all under 3 s
+
+========================================================================
+ST-6  Security under load
+========================================================================
+20 wrong passwords at once for locktest@stress.test → failed_count 13, locked until 2026-11-04 19:01:36
+50 guests open admin/dashboard.php at once → 50 sent to Login, 0 other
+PASS – account locked; every guest redirected to Login
+
+========================================================================
+SUMMARY
+========================================================================
+ST-1  Concurrent approvals, one item             PASS
+ST-2  Same claim approved 5 times at once        PASS
+ST-3  Approve vs Dispose race                    PASS
+ST-4  Load test (NFR4)                           PASS
+ST-5  Heavy pages and exports                    PASS
+ST-6  Lockout and access control under load      PASS
+
+RESULT: 6/6 passed.
+Test data is still in the database. Next: run recover.bat to restore the backup (this also proves
+recovery), or run  stress_test.bat --cleanup  to delete only the stress-test data.
