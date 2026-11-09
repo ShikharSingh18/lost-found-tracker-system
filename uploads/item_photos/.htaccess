@@ -1,0 +1,11 @@
+# Block all direct web access to uploaded photos (Phase 4, Sections 4.2 and 8.4).
+# Photos are only served through items/photo.php, which checks the user's role.
+Require all denied
+
+# Extra safety: never run anything in this folder as PHP.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>

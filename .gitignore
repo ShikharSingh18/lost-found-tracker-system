@@ -1,0 +1,10 @@
+# Each member's own database settings (contains passwords)
+config/db_settings.php
+
+# Uploaded photos and backups contain personal data - never commit them
+uploads/item_photos/*
+!uploads/item_photos/.htaccess
+backups/
+
+# QA tool output (local test logs)
+tools/results/
