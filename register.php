@@ -30,12 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($email === '' || strlen($email) > 254 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'Enter a valid email address.';
     }
-    if (strlen($password) < 8) {
-        $errors[] = 'Password must be at least 8 characters.';
-    } elseif (strlen($password) > 72) {
-        // bcrypt only uses the first 72 bytes, so longer passwords are refused.
-        $errors[] = 'Password must be 72 characters or fewer.';
-    }
+    // length, letter + number + symbol and common-password rules all live in authentication.php
+    $errors = array_merge($errors, validate_password_strength($password, $email, $fullName));
     if ($password !== $confirm) {
         $errors[] = 'The two passwords do not match.';
     }
@@ -76,7 +72,7 @@ require __DIR__ . '/includes/header.php';
 <?= csrf_field() ?>
 <div class="field"><label for="full_name">Full name <span class="req">*</span></label><input id="full_name" name="full_name" minlength="2" maxlength="150" autocomplete="name" required value="<?= e($old['full_name']) ?>"></div>
 <div class="field"><label for="email">Email <span class="req">*</span></label><input id="email" name="email" type="email" maxlength="254" autocomplete="email" required value="<?= e($old['email']) ?>"></div>
-<div class="field"><label for="password">Password <span class="req">*</span></label><input id="password" name="password" type="password" minlength="8" maxlength="72" autocomplete="new-password" required><div class="hint">At least 8 characters.</div></div>
+<div class="field"><label for="password">Password <span class="req">*</span></label><input id="password" name="password" type="password" minlength="8" maxlength="72" autocomplete="new-password" required><div class="hint">8–72 characters with a letter, a number and a symbol. Not a common password.</div></div>
 <div class="field"><label for="confirm">Confirm password <span class="req">*</span></label><input id="confirm" name="confirm" type="password" minlength="8" maxlength="72" autocomplete="new-password" required></div>
 <p class="small muted" style="margin:0">Your name and email are used only to run your account and your claims. See the <a href="<?= e(url('privacy.php')) ?>" target="_blank" rel="noopener">privacy notice</a>.</p>
 <button class="btn btn-block" type="submit">Register</button></form>
