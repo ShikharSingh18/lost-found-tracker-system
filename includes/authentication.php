@@ -12,6 +12,7 @@
  *   requireLogin()           stop guests
  *   requireRole('Admin',..)  stop users without one of the given roles
  *   writeAudit(...)          insert an audit_log row (call inside the same transaction)
+ *   validate_password_strength(...)  password rules, used by register, account and admin/users
  */
 
 // ---------- Output and navigation -------------------------------------------
@@ -180,17 +181,95 @@ function logUserAdmin(PDO $pdo, int $targetUserId, string $action, ?string $deta
     )->execute([':t' => $targetUserId, ':a' => $action, ':d' => $detail, ':p' => $performedBy]);
 }
 
-/** A readable random temporary password, e.g. "Kp7w-Rx3m-Tq9b" (no 0/O/1/l to avoid mix-ups). */
+// ---------- Password rules --------------------------------------------------
+
+/**
+ * One place for the password rules so register, My account and the admin
+ * create form all behave the same. Returns a list of problems, empty = OK.
+ * $email and $name are only used to stop people putting them in the password.
+ */
+function validate_password_strength(string $pw, string $email = '', string $name = ''): array
+{
+    // bcrypt ignores everything after 72 bytes, so longer ones are refused
+    if (strlen($pw) < 8 || strlen($pw) > 72) {
+        return ['Password must be 8–72 characters.'];
+    }
+
+    $errors = [];
+    if (!preg_match('/[A-Za-z]/', $pw))     $errors[] = 'Include at least one letter.';
+    if (!preg_match('/\d/', $pw))           $errors[] = 'Include at least one number.';
+    if (!preg_match('/[^A-Za-z0-9]/', $pw)) $errors[] = 'Include at least one symbol, for example ! @ # $ % -';
+
+    $lower = strtolower($pw);
+
+    // Swap the usual look-alikes back and drop everything that is not a letter,
+    // so "P@ssw0rd1!" ends up as "password" and gets caught by the list below.
+    $folded = preg_replace(
+        '/[^a-z]/', '',
+        strtr($lower, ['@' => 'a', '0' => 'o', '1' => 'i', '3' => 'e', '$' => 's', '5' => 's', '7' => 't', '!' => 'i'])
+    );
+    $common = [
+        'password', 'passw0rd', 'qwerty', 'qwertyuiop', 'letmein', 'welcome', 'admin', 'administrator',
+        'iloveyou', 'monkey', 'dragon', 'abc', 'abcdef', 'login', 'changeme', 'temp', 'temporary',
+        'lostfound', 'lostandfound', 'student', 'staff', 'school', 'football', 'master', 'sunshine',
+    ];
+    foreach ($common as $word) {
+        // the +3 allows for a few extra letters stuck on the end, like "password123"
+        if ($folded === $word || ($folded !== '' && strlen($folded) <= strlen($word) + 3 && str_contains($folded, $word))) {
+            $errors[] = 'That password is too common or easy to guess.';
+            break;
+        }
+    }
+
+    if (preg_match('/^(.)\1+$/', $pw)) {
+        $errors[] = 'Password cannot be one character repeated.';
+    }
+    // running sequences (12345678, abcdefgh, qwertyui) - checked forwards and backwards
+    foreach (['0123456789', 'abcdefghijklmnopqrstuvwxyz', 'qwertyuiopasdfghjklzxcvbnm'] as $run) {
+        if (str_contains($run, $lower) || str_contains(strrev($run), $lower)) {
+            $errors[] = 'Password cannot be a simple sequence like 12345678 or abcdefgh.';
+            break;
+        }
+    }
+
+    $local = strtolower((string) strstr($email, '@', true));
+    if (strlen($local) >= 4 && str_contains($lower, $local)) {
+        $errors[] = 'Password must not contain your email name.';
+    }
+    foreach (preg_split('/\s+/', strtolower(trim($name))) ?: [] as $part) {
+        if (strlen($part) >= 4 && str_contains($lower, $part)) {
+            $errors[] = 'Password must not contain your name.';
+            break;
+        }
+    }
+
+    return array_values(array_unique($errors));
+}
+
+/**
+ * Random temporary password for an admin to hand over, e.g. "k7#Tmw-Pq4xZ9b".
+ * Always has an upper, lower, digit and symbol so it passes validate_password_strength().
+ * Left out look-alikes (0/O, 1/l/I) so it can be read out or typed without mistakes.
+ */
 function generate_temp_password(): string
 {
-    $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-    $groups = [];
-    for ($g = 0; $g < 3; $g++) {
-        $part = '';
-        for ($i = 0; $i < 4; $i++) {
-            $part .= $chars[random_int(0, strlen($chars) - 1)];
-        }
-        $groups[] = $part;
+    $upper  = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    $lower  = 'abcdefghjkmnpqrstuvwxyz';
+    $digits = '23456789';
+    $syms   = '!@#$%&*?-';
+    $pick = fn (string $set): string => $set[random_int(0, strlen($set) - 1)];
+
+    // one of each type first, then fill up to 14
+    $chars = [$pick($upper), $pick($lower), $pick($digits), $pick($syms)];
+    $all = $upper . $lower . $digits . $syms;
+    while (count($chars) < 14) {
+        $chars[] = $pick($all);
     }
-    return implode('-', $groups);
+
+    // shuffle so the first four are not always upper/lower/digit/symbol
+    for ($i = count($chars) - 1; $i > 0; $i--) {
+        $j = random_int(0, $i);
+        [$chars[$i], $chars[$j]] = [$chars[$j], $chars[$i]];
+    }
+    return implode('', $chars);
 }

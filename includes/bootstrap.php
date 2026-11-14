@@ -55,7 +55,7 @@ require_once __DIR__ . '/authentication.php';
 // If an administrator deactivates a user (or the account was removed), the user
 // is logged out on their next click. A role change takes effect immediately.
 if (isset($_SESSION['user']['user_id'])) {
-    $stmt = db()->prepare('SELECT full_name, email, role, is_active FROM users WHERE user_id = :id');
+    $stmt = db()->prepare('SELECT full_name, email, role, is_active, must_change_password FROM users WHERE user_id = :id');
     $stmt->execute([':id' => $_SESSION['user']['user_id']]);
     $fresh = $stmt->fetch();
 
@@ -67,6 +67,13 @@ if (isset($_SESSION['user']['user_id'])) {
         $_SESSION['user']['full_name'] = $fresh['full_name'];
         $_SESSION['user']['email']     = $fresh['email'];
         $_SESSION['user']['role']      = $fresh['role'];
+
+        // temporary password: only My account, logout and the bell check may load until it is changed
+        $openPages = ['account.php', 'logout.php', 'notifications_count.php'];
+        if ($fresh['must_change_password'] && !in_array(basename($_SERVER['SCRIPT_NAME']), $openPages, true)) {
+            flash('warn', 'You are using a temporary password. Choose your own password to continue.');
+            redirect('account.php');
+        }
     }
     unset($stmt, $fresh);
 }
