@@ -5,6 +5,8 @@
  * temporary password instead).
  *
  * - Create Student, Staff or Admin accounts (temporary password typed or generated).
+ *   A typed password must pass validate_password_strength(). Every new account and every
+ *   admin-set password gets must_change_password = TRUE, so the user picks their own at first login.
  * - Change role, deactivate / reactivate (accounts are never deleted – Section 8.2).
  * - Set a new temporary password; unlock an account locked after 5 failed logins.
  * - Safety rules: an admin can't change their OWN role or deactivate themselves, and
@@ -50,14 +52,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $generated = $pass === '';
         if ($generated) {
             $pass = generate_temp_password();
-        } elseif (strlen($pass) < 8 || strlen($pass) > 72) {
-            $createErrors[] = 'Temporary password must be 8–72 characters (or leave it empty to generate one).';
+        } else {
+            foreach (validate_password_strength($pass, $email, $name) as $problem) {
+                $createErrors[] = 'Temporary password: ' . $problem;
+            }
         }
 
         if (!$createErrors) {
             try {
                 $pdo->beginTransaction();
-                $pdo->prepare('INSERT INTO users (full_name, email, password_hash, role) VALUES (:n, :e, :h, :r)')
+                $pdo->prepare('INSERT INTO users (full_name, email, password_hash, role, must_change_password) VALUES (:n, :e, :h, :r, TRUE)')
                     ->execute([':n' => $name, ':e' => $email, ':h' => password_hash($pass, PASSWORD_DEFAULT), ':r' => $role]);
                 $newId = (int) $pdo->lastInsertId();
                 logUserAdmin($pdo, $newId, 'USER_CREATED', $role, $admin['user_id']);
@@ -165,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         redirect($back);
                     }
                     $temp = generate_temp_password();
-                    $pdo->prepare('UPDATE users SET password_hash = :h WHERE user_id = :id')
+                    $pdo->prepare('UPDATE users SET password_hash = :h, must_change_password = TRUE WHERE user_id = :id')
                         ->execute([':h' => password_hash($temp, PASSWORD_DEFAULT), ':id' => $userId]);
                     $pdo->prepare('DELETE FROM login_attempts WHERE email = :e')->execute([':e' => $u['email']]);
                     logUserAdmin($pdo, $userId, 'PASSWORD_SET_BY_ADMIN', null, $admin['user_id']);
@@ -300,7 +304,7 @@ require __DIR__ . '/../includes/header.php';
 <b><?= e($temp['why']) ?> for <?= e($temp['email']) ?>:</b>
 <code class="temp-pass" id="temp-pass"><?= e($temp['password']) ?></code>
 <button class="btn btn-sm btn-outline" type="button" onclick="navigator.clipboard && navigator.clipboard.writeText(document.getElementById('temp-pass').textContent).then(function(){this.textContent='Copied';}.bind(this))">Copy</button>
-<div class="small" style="margin-top:.4rem">Give it to the person privately. It is shown <b>only once</b> and is not stored anywhere in readable form. They can change it under My account.</div>
+<div class="small" style="margin-top:.4rem">Give it to the person privately. It is shown <b>only once</b> and is not stored anywhere in readable form. They will be asked to choose their own password the first time they log in.</div>
 </div>
 <?php endif; ?>
 
@@ -335,7 +339,7 @@ require __DIR__ . '/../includes/header.php';
 <div class="field"><label for="role">Role <span class="req">*</span></label><select id="role" name="role" required>
 <?php foreach (ROLES as $r): ?><option<?= $createOld['role'] === $r ? ' selected' : '' ?>><?= $r ?></option><?php endforeach; ?>
 </select></div>
-<div class="field"><label for="password">Temporary password</label><input id="password" name="password" type="text" minlength="8" maxlength="72" autocomplete="off" placeholder="Leave empty to generate one"><div class="hint">8–72 characters. Leave empty and the system makes one for you.</div></div>
+<div class="field"><label for="password">Temporary password</label><input id="password" name="password" type="text" minlength="8" maxlength="72" autocomplete="off" placeholder="Leave empty to generate one"><div class="hint">8–72 characters with a letter, a number and a symbol. Leave empty and the system makes one for you. The user must change it at first login.</div></div>
 <div class="btn-row full"><button class="btn" type="submit">Create account</button></div>
 </form></details>
 
