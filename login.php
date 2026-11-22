@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Too many failed attempts. Please wait ' . LOCKOUT_MINUTES . ' minutes and try again.';
     } else {
         $stmt = $pdo->prepare(
-            'SELECT user_id, full_name, email, password_hash, role, is_active
+            'SELECT user_id, full_name, email, password_hash, role, is_active, must_change_password
              FROM users WHERE email = :email'
         );
         $stmt->execute([':email' => $email]);
@@ -54,7 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ->execute([':h' => password_hash($password, PASSWORD_DEFAULT), ':id' => $user['user_id']]);
             }
             log_user_in($user);
-            redirect('index.php');   // later: send Admins to admin/dashboard.php once it exists
+            // a temporary password has to be replaced before anything else
+            redirect($user['must_change_password'] ? 'account.php' : 'index.php');   // later: send Admins to admin/dashboard.php once it exists
         }
 
         // Failure: count it, lock after MAX_FAILED_LOGINS.
