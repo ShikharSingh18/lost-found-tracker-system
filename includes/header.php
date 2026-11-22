@@ -41,6 +41,8 @@ $menu = [
 <?php foreach ($extraCss ?? [] as $css): ?>
 <link rel="stylesheet" href="<?= e(asset_url($css)) ?>">
 <?php endforeach; ?>
+<link rel="stylesheet" href="<?= e(asset_url('assets/css/theme.css')) ?>">
+<script src="<?= e(asset_url('assets/js/theme.js')) ?>"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -48,7 +50,10 @@ $menu = [
   <div class="header-wrap">
     <div class="bar">
       <a class="brand" href="<?= e(url('index.php')) ?>"><span class="brand-mark" aria-hidden="true">🔎</span>Lost &amp; Found</a>
-      <label class="nav-btn" for="nav-toggle"><span aria-hidden="true">☰</span><span class="sr-only">Toggle menu</span></label>
+      <div class="bar-actions">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Switch to dark mode"><span aria-hidden="true">🌙</span></button>
+        <label class="nav-btn" for="nav-toggle"><span aria-hidden="true">☰</span><span class="sr-only">Toggle menu</span></label>
+      </div>
     </div>
     <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
     <nav class="nav" aria-label="Main">

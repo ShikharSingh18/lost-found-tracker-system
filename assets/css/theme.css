@@ -1,0 +1,80 @@
+/* Theme switcher button and dark theme.
+   Load after style.css, photos.css and upload.css.
+   The dark colours only apply when <html data-theme="dark"> (set by assets/js/theme.js). */
+
+/* ---- Toggle button (both themes) ---- */
+.bar{gap:.75rem}
+.bar-actions{display:flex;align-items:center;gap:.5rem}
+.theme-toggle{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:transparent;color:inherit;font-size:1.15rem;line-height:1;cursor:pointer}
+.theme-toggle:hover{background:var(--primary-soft)}
+
+/* ---- Dark palette: most of the site reads these variables ---- */
+[data-theme="dark"]{
+  color-scheme:dark;
+  --primary:#3b63e0;--primary-dark:#2f52c4;--primary-soft:#1d2a4f;
+  --ink:#e6ebf3;--muted:#9aa7ba;--line:#2b3649;--bg:#0f1520;--card:#171f2e;
+  --ok:#4cc38a;--ok-bg:#12301f;--warn:#f2c16b;--warn-bg:#33270c;--bad:#ff7b72;--bad-bg:#3a1714;--info-bg:#17274a;
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 4px 14px rgba(0,0,0,.35);
+}
+
+/* ---- style.css: colours that were written out by hand ---- */
+/* --primary is a button background in dark mode, so plain links get a lighter blue */
+[data-theme="dark"] a:not([class]){color:#8fb0ff}
+[data-theme="dark"] .site-footer a{color:inherit}
+[data-theme="dark"] :focus-visible{outline-color:#6b8dff}
+[data-theme="dark"] .skip{background:var(--card)}
+
+/* text that sat on a light blue background */
+[data-theme="dark"] .nav a[aria-current="page"],
+[data-theme="dark"] .nav-more summary:hover,
+[data-theme="dark"] .nav-more summary[aria-current],
+[data-theme="dark"] .pill-claimed,
+[data-theme="dark"] .steps li::before,
+[data-theme="dark"] .alert-info,
+[data-theme="dark"] .upl-count{color:#a9c1ff}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea{background:#101826;border-color:#3a4760}
+[data-theme="dark"] ::placeholder{color:#7d8aa0}
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus{outline-color:#3b63e0;border-color:#6b8dff}
+
+[data-theme="dark"] .btn-outline{background:transparent;color:#8fb0ff;border-color:#8fb0ff}
+[data-theme="dark"] .btn-outline:hover{background:var(--primary-soft)}
+[data-theme="dark"] .hero .btn-outline{color:#fff;border-color:#fff}
+
+[data-theme="dark"] .alert-ok{border-color:#1f5a3a;color:#7fe0aa}
+[data-theme="dark"] .alert-warn{border-color:#5a4513}
+[data-theme="dark"] .alert-bad{border-color:#6b2a25}
+[data-theme="dark"] .alert-info{border-color:#27407a}
+
+[data-theme="dark"] .thumb,
+[data-theme="dark"] .photo{background:linear-gradient(135deg,#1d2a4f,#172036)}
+
+[data-theme="dark"] .pager a,
+[data-theme="dark"] .pager span{background:var(--card)}
+[data-theme="dark"] .pager .on{background:var(--primary)}
+
+/* ---- photos.css ---- */
+[data-theme="dark"] .gallery button{background:var(--card)}
+[data-theme="dark"] .temp-pass{background:rgba(0,0,0,.35)}
+[data-theme="dark"] .stat-warn{border-color:#5a4513}
+[data-theme="dark"] .card-warn{border-color:#5a4513;background:#2a210c}
+
+/* ---- upload.css (Log Found Item) ---- */
+[data-theme="dark"] .upl-count.full{color:var(--ok)}
+[data-theme="dark"] .demo{border-color:#3a4760;background:linear-gradient(180deg,#141c2b,#101826)}
+[data-theme="dark"] .demo-stage{background:#0f1520}
+[data-theme="dark"] .chip{background:#2b3649}
+[data-theme="dark"] .shots li{background:var(--card)}
+[data-theme="dark"] .shots li.done{background:var(--ok-bg);border-color:#1f5a3a}
+[data-theme="dark"] .drop{border-color:#3d5aa8}
+[data-theme="dark"] .drop:hover,
+[data-theme="dark"] .drop.over{background:#26386a;border-color:var(--primary)}
+[data-theme="dark"] .pv{background:var(--card)}
+[data-theme="dark"] .pv .rm{background:rgba(23,31,46,.95)}
+@media (prefers-reduced-motion:reduce){
+  [data-theme="dark"] .demo-frame{background:var(--card)}
+}
