@@ -1,14 +1,16 @@
 <?php
 /*
- * Module 10: privacy settings and helpers (POPIA + GDPR, group note 8; Phase 3 NFR3).
+ * Module 10: privacy settings and helpers (POPIA + GDPR).
  *
- * >>> THE GROUP MUST CONFIRM THESE TWO SETTINGS BEFORE THE DEMO <<<
+ * >>> THE COLLEGE RUNNING THIS SYSTEM MUST SET THESE TWO VALUES BEFORE GOING LIVE <<<
  *   RETENTION_MONTHS  how long proof-of-ownership text and read notifications are kept
- *                     after a claim is decided (placeholder: 12 months).
- *   PRIVACY_CONTACT   who people contact about their personal information.
+ *                     after a claim is decided (default 12 months is a placeholder;
+ *                     use the period your own policy requires).
+ *   PRIVACY_CONTACT   who people contact about their personal information (for example
+ *                     your Information Officer). Shown in the public privacy notice.
  */
 const RETENTION_MONTHS = 12;
-const PRIVACY_CONTACT  = 'the Lost & Found office (Information Officer: to be confirmed by Group 11)';
+const PRIVACY_CONTACT  = 'the Lost & Found office (contact details to be added by the college)';
 
 const ANONYMISED_DOMAIN = 'deleted.invalid';   // ".invalid" can never be a real email domain
 const PROOF_REMOVED_TEXT = '[Proof text removed for privacy]';

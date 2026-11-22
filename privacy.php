@@ -2,7 +2,9 @@
 /*
  * Module 10: Privacy notice (POPIA s18 notification / GDPR Art. 13). Public: no login needed,
  * linked from the footer of every page, the Register page and the claim consent box.
- * Wording is plain-language; the group should check it against the college's own policy.
+ * Wording is plain-language and is a starting template, not legal advice. The college running
+ * this system must check it against its own privacy policy and the laws that apply to it
+ * (including the regulator named under "Your rights") before going live.
  */
 require_once __DIR__ . '/includes/bootstrap.php';
 require_once __DIR__ . '/includes/privacy.php';
