@@ -3,6 +3,7 @@
 <?php foreach ($extraJs ?? [] as $js): ?>
 <script src="<?= e(asset_url($js)) ?>"></script>
 <?php endforeach; ?>
+<script src="<?= e(asset_url('assets/js/ui.js')) ?>" defer></script>
 <?php if (current_user() !== null): /* Module 6: live bell count for logged-in users */ ?>
 <script src="<?= e(asset_url('assets/js/notifications.js')) ?>" data-count-url="<?= e(url('notifications_count.php')) ?>" data-inbox-url="<?= e(url('notifications.php')) ?>"></script>
 <?php endif; ?>
