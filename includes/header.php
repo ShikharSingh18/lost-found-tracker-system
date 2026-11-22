@@ -1,7 +1,6 @@
 <?php
 /*
- * Shared page header and role-based menu (Phase 4, Section 7.2, Table 13).
- * Markup copied from Simphiwe's HTML pages so style.css still applies.
+ * Shared page header and role-based menu.
  *
  * Before including, a page can set:
  *   $pageTitle   text for the <title> tag
