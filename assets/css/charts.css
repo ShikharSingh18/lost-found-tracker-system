@@ -1,0 +1,70 @@
+/* Admin charts, report chips, print layout and the Filters panel fix (dashboard + reports). */
+.chart-grid{display:grid;gap:1rem;margin:1rem 0}
+@media (min-width:900px){.chart-grid{grid-template-columns:1fr 1fr}.chart-wide{grid-column:1/-1}}
+.chart-card{padding:1rem}
+.chart-head{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.chart-head h3{margin:0}
+.chart-tools{display:flex;gap:.5rem;align-items:center}
+.chart-tools select{width:auto;min-height:38px;padding:.3rem .6rem;font-size:.9rem;border-radius:10px}
+.chart-box{position:relative}
+.chart-box svg{width:100%;height:auto;display:block}
+.chart-box svg [data-tip]{cursor:default}
+.chart-box svg [data-tip]:hover{opacity:.85}
+.chart-tip{position:absolute;pointer-events:none;background:#16202e;color:#fff;font-size:.8rem;padding:.3rem .55rem;border-radius:8px;white-space:nowrap;transform:translate(-50%,-130%);opacity:0;transition:opacity .1s;z-index:5}
+.chart-tip.on{opacity:1}
+.chart-legend{list-style:none;margin:.5rem 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.35rem 1rem;font-size:.85rem}
+.chart-legend li{display:flex;align-items:center;gap:.4rem}
+.chart-legend .sw{width:.8rem;height:.8rem;border-radius:3px;flex:none}
+.chart-empty{color:var(--muted);padding:2rem 0;text-align:center;margin:0}
+
+/* Report toolbar and status chips (scoped to .chips so they never pick up the upload page's .chip) */
+.report-bar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;margin:1rem 0 .5rem}
+.report-actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chips .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .8rem;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font-size:.9rem}
+.chips .chip b{font-size:1rem}
+.chips .chip:hover{border-color:var(--primary);text-decoration:none}
+.chips .chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.print-only{display:none}
+
+/* Filters: collapsed by default; the toggle must work on desktop too (style.css disables it there) */
+details.rep-filters summary{pointer-events:auto}
+details.rep-filters summary::after{content:"+"}
+details.rep-filters[open] summary::after{content:"\2212"}
+
+@media (min-width:900px){
+  .table-wrap tbody tr:nth-child(even) td{background:#fafbfd}
+  .table-wrap tbody tr:hover td{background:var(--primary-soft)}
+}
+
+/* Dark mode (theme.css sets [data-theme="dark"]). CSS beats the SVG colour attributes, so the chart
+   text, grid and borders follow the theme. PNG downloads keep the light colours on white. */
+[data-theme="dark"] .chart-box svg text{fill:#9aa7ba}
+[data-theme="dark"] .chart-box svg text[fill="#16202e"]{fill:#e6ebf3}
+[data-theme="dark"] .chart-box svg line[stroke="#e6ebf2"]{stroke:#2b3649}
+[data-theme="dark"] .chart-box svg line[stroke="#b9c3d3"]{stroke:#3a4760}
+[data-theme="dark"] .chart-box svg [stroke="#fff"]{stroke:#171f2e}
+[data-theme="dark"] .chart-tip{background:#e6ebf3;color:#0f1520}
+[data-theme="dark"] .chips .chip{background:var(--card);color:var(--ink);border-color:var(--line)}
+[data-theme="dark"] .chips .chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+@media (min-width:900px){
+  [data-theme="dark"] .table-wrap tbody tr:nth-child(even) td{background:#1b2436}
+  [data-theme="dark"] .table-wrap tbody tr:hover td{background:var(--primary-soft)}
+}
+
+@media print{
+  @page{margin:12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .site-header,.site-footer,.btn,.chart-tools,.tabs,.rep-filters,.report-actions,.chips,.pager,.chart-tip,.no-print,.dash-links,.theme-toggle{display:none!important}
+  .print-only{display:block;margin-bottom:.75rem}
+  body{background:#fff;color:#000}
+  main{max-width:none;padding:0}
+  .chart-grid{grid-template-columns:1fr 1fr;gap:.5rem}
+  .chart-wide{grid-column:1/-1}
+  .chart-card,.stat{break-inside:avoid;box-shadow:none}
+  table{display:table;width:100%;font-size:.8rem;box-shadow:none}
+  thead{position:static;display:table-header-group}
+  tr{display:table-row;border:0;padding:0;margin:0;break-inside:avoid;background:transparent}
+  th,td{display:table-cell;padding:.3rem .5rem;border-bottom:1px solid #ccc;text-align:left}
+  td::before{content:none}
+}

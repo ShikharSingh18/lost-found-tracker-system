@@ -9,11 +9,15 @@
  *                           Filters: date submitted from/to, status.
  *   &export=csv             Same filters, downloaded as a CSV file (opens in Excel).
  *
+ * Charts (assets/js/charts.js) follow the same filters and can be saved as PNG; "Print report"
+ * gives a clean print layout (use "Save as PDF" in the print dialog for a PDF).
+ *
  * POPIA (data minimisation): the claims report never includes the proof-of-ownership
  * text, and the claimant's email is only in the CSV, not on screen. Read-only page.
  */
 require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/reports.php';
+require_once __DIR__ . '/../includes/chart_data.php';
 
 requireRole('Admin');
 $pdo = db();
@@ -103,12 +107,27 @@ $byStatus = array_column($stmt->fetchAll(), 'n', 's');
 $query = array_filter(['type' => $type === 'claims' ? 'claims' : '', 'from' => $from ?? '', 'to' => $to ?? '',
     'status' => $status, 'category' => $categoryId ?: ''], fn ($v) => $v !== '');
 
+// charts follow the filters; the status chart ignores the status filter (like the totals)
+$charts = $total > 0 ? report_charts($pdo, $type, $from_sql, $whereSql, $params, $byStatus) : [];
+
+// Filters panel stays closed unless a filter is in use
+$filtersActive = ($from || $to || $status !== '' || $categoryId);
+$catName = '';
+foreach ($categories as $c) if ((int) $c['category_id'] === $categoryId) $catName = $c['category_name'];
+$filterBits = array_filter([$from ? 'from ' . $from : '', $to ? 'to ' . $to : '', $status !== '' ? 'status ' . $status : '', $catName !== '' ? 'category ' . $catName : '']);
+$statusList = $type === 'items' ? STATUS_LABELS : CLAIM_STATUSES;
+$chipUrl = fn (string $s): string => url('admin/reports.php?' . http_build_query(array_diff_key($query, ['status' => 1]) + ($s !== '' ? ['status' => $s] : [])));
+
 $pageTitle = $type === 'items' ? 'Items report' : 'Claims report';
 $activeNav = 'reports';
-$extraCss  = ['assets/css/photos.css'];
+$extraCss  = ['assets/css/photos.css', 'assets/css/charts.css'];
+$extraJs   = ['assets/js/charts.js'];
 require __DIR__ . '/../includes/header.php';
 ?>
-<div class="page-head"><h1>Reports</h1><p class="muted">View and export items and claims. Exports use the filters you set here.</p></div>
+<div class="page-head"><h1>Reports</h1><p class="muted">View, chart and export items and claims. Charts and exports use the filters you set here.</p></div>
+
+<div class="print-only"><h2 style="margin:0"><?= e($pageTitle) ?></h2>
+<p class="small" style="margin:0">Filters: <?= $filterBits ? e(implode(', ', $filterBits)) : 'none' ?> · <?= $total ?> row<?= $total === 1 ? '' : 's' ?> · printed <?= e(date('Y-m-d H:i')) ?></p></div>
 
 <nav class="tabs" aria-label="Report type">
 <a href="<?= e(url('admin/reports.php')) ?>"<?= $type === 'items' ? ' class="on" aria-current="page"' : '' ?>>Items report</a>
@@ -117,13 +136,13 @@ require __DIR__ . '/../includes/header.php';
 
 <?php if ($dateWarning): ?><div class="alert alert-warn" role="status"><?= e($dateWarning) ?></div><?php endif; ?>
 
-<details class="card filters" open><summary>Filters</summary>
+<details class="card filters rep-filters"<?= $filtersActive ? ' open' : '' ?>><summary>Filters<?= $filtersActive ? ' (active)' : '' ?></summary>
 <form class="form form-2" action="<?= e(url('admin/reports.php')) ?>" method="get" style="margin-top:.75rem">
 <?php if ($type === 'claims'): ?><input type="hidden" name="type" value="claims"><?php endif; ?>
 <div class="field"><label for="from"><?= $type === 'items' ? 'Found from' : 'Submitted from' ?></label><input id="from" name="from" type="date" value="<?= e($from ?? '') ?>"></div>
 <div class="field"><label for="to"><?= $type === 'items' ? 'Found to' : 'Submitted to' ?></label><input id="to" name="to" type="date" value="<?= e($to ?? '') ?>"></div>
 <div class="field"><label for="status">Status</label><select id="status" name="status"><option value="">Any status</option>
-<?php foreach ($type === 'items' ? STATUS_LABELS : CLAIM_STATUSES as $s): ?><option<?= $status === $s ? ' selected' : '' ?>><?= $s ?></option><?php endforeach; ?>
+<?php foreach ($statusList as $s): ?><option<?= $status === $s ? ' selected' : '' ?>><?= $s ?></option><?php endforeach; ?>
 </select></div>
 <?php if ($type === 'items'): ?>
 <div class="field"><label for="category">Category</label><select id="category" name="category"><option value="">Any category</option>
@@ -135,10 +154,23 @@ require __DIR__ . '/../includes/header.php';
 </form></details>
 
 <div class="report-bar">
-<p class="small muted" style="margin:0"><b><?= $total ?></b> <?= $type === 'items' ? 'item' : 'claim' ?><?= $total === 1 ? '' : 's' ?>
-<?php foreach ($type === 'items' ? STATUS_LABELS : CLAIM_STATUSES as $s): ?> · <?= $s ?> <?= (int) ($byStatus[$s] ?? 0) ?><?php endforeach; ?></p>
+<div class="chips" aria-label="Filter by status">
+<a class="chip<?= $status === '' ? ' on' : '' ?>" href="<?= e($chipUrl('')) ?>"><b><?= array_sum(array_map('intval', $byStatus)) ?></b> All</a>
+<?php foreach ($statusList as $s): ?><a class="chip<?= $status === $s ? ' on' : '' ?>" href="<?= e($chipUrl($s)) ?>"><b><?= (int) ($byStatus[$s] ?? 0) ?></b> <?= $s ?></a>
+<?php endforeach; ?>
+</div>
+<div class="report-actions">
+<?php if ($total > 0): ?><button type="button" class="btn btn-ghost" data-print>Print report</button><?php endif; ?>
 <?= csv_buttons('admin/reports.php', $query, $total) ?>
 </div>
+</div>
+<p class="small muted" style="margin:0 0 .5rem">Showing <b><?= $total ?></b> <?= $type === 'items' ? 'item' : 'claim' ?><?= $total === 1 ? '' : 's' ?> for the current filters.</p>
+
+<?php if ($charts): ?>
+<div class="chart-grid">
+<?php foreach ($charts as $ch) echo chart_card($ch), "\n"; ?>
+</div>
+<?php endif; ?>
 
 <?php if (!$rows): ?>
 <div class="card"><p style="margin:0">Nothing matches these filters.</p></div>
