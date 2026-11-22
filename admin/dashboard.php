@@ -2,12 +2,14 @@
 /*
  * Module 9: Dashboard (Administrator) – Phase 4 Table 21 "Dashboard summary" and FR8.
  * Summary cards (items logged, Found, Claimed, collected, Disposed, pending claims,
- * approved/rejected claims), items by category, claims waiting longest, Found items
+ * approved/rejected claims), charts (status split, items by category, activity per month;
+ * switchable chart types, PNG download, print), claims waiting longest, Found items
  * waiting longest (helps the disposal/retention decision) and the latest audit events.
  * Read-only: nothing on this page changes data.
  */
 require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/reports.php';
+require_once __DIR__ . '/../includes/chart_data.php';
 
 requireRole('Admin');
 $pdo = db();
@@ -37,12 +39,12 @@ $loggedThisMonth = (int) $stmt->fetchColumn();
 $byCategory = $pdo->query(
     "SELECT c.category_name, COUNT(i.item_id) AS total,
             SUM(CASE WHEN i.status = 'Found' THEN 1 ELSE 0 END) AS found,
-            SUM(CASE WHEN i.status = 'Claimed' THEN 1 ELSE 0 END) AS claimed
+            SUM(CASE WHEN i.status = 'Claimed' THEN 1 ELSE 0 END) AS claimed,
+            SUM(CASE WHEN i.status = 'Disposed' THEN 1 ELSE 0 END) AS disposed
      FROM categories c LEFT JOIN items i ON i.category_id = c.category_id
      GROUP BY c.category_id, c.category_name
      ORDER BY total DESC, c.category_name"
 )->fetchAll();
-$maxCat = max(1, ...array_map(fn ($r) => (int) $r['total'], $byCategory ?: [['total' => 1]]));
 
 $pendingOldest = $pdo->query(
     "SELECT cl.claim_id, cl.date_submitted, i.item_id, c.category_name, u.full_name
@@ -70,12 +72,30 @@ $daysAgo = function (string $date) use ($today): string {
     return $d === 0 ? 'today' : ($d === 1 ? '1 day' : "$d days");
 };
 
+// ---------- Charts ----------
+$catRows = array_values(array_filter($byCategory, fn ($r) => (int) $r['total'] > 0));
+$charts = [
+    chart_status_cfg('items-status', 'Items by status', STATUS_LABELS,
+        ['Found' => $n($items['found']), 'Claimed' => $n($items['claimed']), 'Disposed' => $n($items['disposed'])], 'Items'),
+    chart_status_cfg('claims-status', 'Claims by status', CLAIM_STATUSES,
+        ['Pending' => $n($claims['pending']), 'Approved' => $n($claims['approved']), 'Rejected' => $n($claims['rejected'])], 'Claims'),
+    chart_cfg('items-category', 'Items by category', 'hbar', array_column($catRows, 'category_name'), [
+        ['name' => 'Found', 'data' => array_map(fn ($r) => (int) $r['found'], $catRows), 'color' => CHART_STATUS_COLORS['Found']],
+        ['name' => 'Claimed', 'data' => array_map(fn ($r) => (int) $r['claimed'], $catRows), 'color' => CHART_STATUS_COLORS['Claimed']],
+        ['name' => 'Disposed', 'data' => array_map(fn ($r) => (int) $r['disposed'], $catRows), 'color' => CHART_STATUS_COLORS['Disposed']],
+    ], ['types' => ['hbar', 'stacked', 'bar', 'doughnut', 'pie']]),
+    chart_monthly($pdo),
+];
+
 $pageTitle = 'Dashboard';
 $activeNav = 'dashboard';
-$extraCss  = ['assets/css/photos.css'];
+$extraCss  = ['assets/css/photos.css', 'assets/css/charts.css'];
+$extraJs   = ['assets/js/charts.js'];
 require __DIR__ . '/../includes/header.php';
 ?>
-<div class="page-head"><h1>Dashboard</h1><p class="muted">Summary of items and claims. Figures are live – reload the page to update them.</p></div>
+<div class="page-head"><h1>Dashboard</h1><p class="muted">Summary of items and claims. Figures are live – reload the page to update them.
+<button type="button" class="btn btn-ghost btn-sm no-print" data-print style="margin-left:.5rem">Print dashboard</button></p></div>
+<div class="print-only"><p class="small">Dashboard · printed <?= e(date('Y-m-d H:i')) ?></p></div>
 
 <h2 class="dash-h">Items</h2>
 <div class="stats">
@@ -93,23 +113,13 @@ require __DIR__ . '/../includes/header.php';
 <a class="stat stat-link" href="<?= e(url('admin/reports.php?type=claims')) ?>"><b><?= $n($claims['total']) ?></b><span>Claims submitted</span></a>
 </div>
 
-<div class="dash-grid">
-<section class="card">
-<h2 style="margin-top:0">Items by category</h2>
-<?php if (!$n($items['total'])): ?><p class="muted">No items logged yet.</p><?php else: ?>
-<div class="bars">
-<?php foreach ($byCategory as $c): $t = (int) $c['total']; ?>
-<div class="bar-row" title="<?= e($c['category_name']) ?>: <?= $t ?> item(s), <?= (int) $c['found'] ?> Found, <?= (int) $c['claimed'] ?> Claimed">
-<span><?= e($c['category_name']) ?></span>
-<div class="track" role="img" aria-label="<?= e($c['category_name']) ?>: <?= $t ?> item(s)"><div class="fill" style="width:<?= round($t / $maxCat * 100) ?>%"></div></div>
-<b><?= $t ?></b>
+<h2 class="dash-h">Charts</h2>
+<p class="small muted" style="margin-top:0">Hover a bar, slice or point for the exact figure. Use the dropdown on a chart to change its type, and PNG to save it as an image.</p>
+<div class="chart-grid">
+<?php foreach ($charts as $k => $ch) echo chart_card($ch, $k === 3 ? 'chart-wide' : ''), "\n"; ?>
 </div>
-<?php endforeach; ?>
-</div>
-<p class="small muted" style="margin-bottom:0">All statuses. Hover a bar for Found / Claimed.</p>
-<?php endif; ?>
-</section>
 
+<div class="dash-grid">
 <section class="card">
 <h2 style="margin-top:0">Claims waiting longest</h2>
 <?php if (!$pendingOldest): ?><p class="muted" style="margin-bottom:0">All claims have been decided.</p><?php else: ?>
@@ -147,7 +157,7 @@ require __DIR__ . '/../includes/header.php';
 </section>
 </div>
 
-<div class="btn-row" style="margin-top:1rem">
+<div class="btn-row dash-links" style="margin-top:1rem">
 <a class="btn" href="<?= e(url('admin/reports.php')) ?>">Items report</a>
 <a class="btn btn-outline" href="<?= e(url('admin/reports.php?type=claims')) ?>">Claims report</a>
 <a class="btn btn-outline" href="<?= e(url('admin/audit_log.php')) ?>">Audit log</a>
