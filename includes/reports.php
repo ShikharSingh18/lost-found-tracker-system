@@ -89,13 +89,12 @@ function send_csv(string $filename, array $header, iterable $rows): never
     exit;
 }
 
-/** Export buttons: Excel (;) and standard comma CSV, keeping the current filters. */
+/** Export button: one "Export to CSV" link that keeps the current filters. */
 function csv_buttons(string $page, array $query, int $total): string
 {
     if ($total < 1) return '';
     $rows = $total . ' row' . ($total === 1 ? '' : 's');
-    return '<div class="export-links"><a class="btn btn-outline" download href="' . e(url($page . '?' . http_build_query($query + ['export' => 'csv']))) . '">Export to Excel (' . $rows . ')</a>'
-        . '<a class="small" download href="' . e(url($page . '?' . http_build_query($query + ['export' => 'csv', 'sep' => 'comma']))) . '">Comma-separated CSV</a></div>';
+    return '<div class="export-links"><a class="btn btn-outline" download href="' . e(url($page . '?' . http_build_query($query + ['export' => 'csv']))) . '">Export to CSV (' . $rows . ')</a></div>';
 }
 
 function pager_links(string $page, array $query, int $current, int $pages): string
