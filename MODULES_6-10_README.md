@@ -148,9 +148,9 @@ badge. They now show the claim's current status ("Claim reviewed" + Approved/Rej
   (Pending – highlighted when > 0, Approved, Rejected, total). Every card opens the matching report.
   Items by category (bar chart), claims waiting longest, Found items waiting longest, latest activity.
 - Reports (new menu item): Items report (date found from/to, status, category) and Claims report
-  (date submitted from/to, status). 25 per page, status totals, "Export to Excel" with the same filters
-  (semicolon-separated, so it opens in columns in Excel on South African Windows – BUG-07), plus a
-  "Comma-separated CSV" link for other programs. UTF-8. A cell that starts with = + - @ is saved with a ' in front, so Excel
+  (date submitted from/to, status). 25 per page, status totals, "Export to CSV" with the same filters
+  (semicolon-separated, so it opens in columns in Excel on South African Windows – BUG-07; add
+  &sep=comma to the address for a standard comma file). UTF-8. A cell that starts with = + - @ is saved with a ' in front, so Excel
   can't run it as a formula (CSV injection protection).
 - Privacy: reports never include the proof-of-ownership text; claimant emails appear only in the
   claims CSV (needed to contact owners).
@@ -173,16 +173,16 @@ badge. They now show the claim's current status ("Claim reviewed" + Approved/Rej
 96. Items report: no filters → all items; status totals add up to the total.
 97. Items report filters: Status = Claimed; Category = Keys; a date range. Set "from" after "to" →
     note "dates were swapped".
-98. Export to Excel (Items) → items_report_<date>.csv opens in Excel with each heading in its own column
+98. Export to CSV (Items) → items_report_<date>.csv opens in Excel with each heading in its own column
     (Item ID … Logged at) and the same rows as the screen (all pages); quotes/commas correct.
-    "Comma-separated CSV" gives the standard comma file (for Google Sheets / other programs).
+    Adding &sep=comma to the address gives the standard comma file (for Google Sheets / other programs).
 99. CSV injection: log an item with description  =1+1  → in the CSV/Excel it shows '=1+1 as text,
     not 2.
 100. Claims report: all claims with claimant, status, submitted, decided by; Status = Rejected filter;
-     Export to Excel includes the claimant email but NOT the proof text.
+     Export to CSV includes the claimant email but NOT the proof text.
 101. Audit log "Items and claims": newest first; Action filter (e.g. Claim approved); Performed by filter;
      item # filter; click an item number → its full history.
-102. Audit log "Account changes": the Module 8 changes (Test Staff Two); filter by account; Export to Excel.
+102. Audit log "Account changes": the Module 8 changes (Test Staff Two); filter by account; Export to CSV.
 103. Read-only: there is no edit or delete on the audit log; bad values in the address bar
      (e.g. ?item=abc&from=2026-13-40) → "A date was not valid and was ignored.", no error page.
 104. Phone (Chrome F12 → device toolbar, iPhone 12 Pro): dashboard, reports and audit log readable,
